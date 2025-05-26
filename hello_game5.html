@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>موقع الألعاب 🎮</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Tahoma, sans-serif;
+      background-color: black;
+      color: #0af;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin: 20px 0;
+    }
+
+    .games {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .game {
+      background-color: #111;
+      border: 2px solid #0af;
+      border-radius: 10px;
+      width: 200px;
+      cursor: pointer;
+      transition: 0.3s;
+      padding: 10px;
+    }
+
+    .game:hover {
+      background-color: #0af;
+      color: #000;
+    }
+
+    .game img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    button {
+      margin: 10px;
+      background-color: #0af;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .game-section {
+      margin-top: 30px;
+    }
+
+    .color-option {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      margin: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="home">
+    <h1>اختر لعبتك المفضلة 🎮</h1>
+    <div class="games">
+      <!-- الألعاب الأصلية 1-5 -->
+      <div class="game" onclick="showGame('rock')"><img src="https://via.placeholder.com/200x120?text=RPS"><p>حجر ورقة مقص</p></div>
+      <div class="game" onclick="showGame('xo')"><img src="https://via.placeholder.com/200x120?text=XO"><p>XO</p></div>
+      <div class="game" onclick="showGame('guess')"><img src="https://via.placeholder.com/200x120?text=Guess"><p>تخمين الرقم</p></div>
+      <div class="game" onclick="showGame('memory')"><img src="https://via.placeholder.com/200x120?text=Memory"><p>الذاكرة</p></div>
+      <div class="game" onclick="showGame('click')"><img src="https://via.placeholder.com/200x120?text=Click"><p>سرعة الضغط</p></div>
+      <!-- الألعاب الجديدة 6-10 -->
+      <div class="game" onclick="showGame('math')"><img src="https://via.placeholder.com/200x120?text=Math"><p>رياضيات</p></div>
+      <div class="game" onclick="showGame('reaction')"><img src="https://via.placeholder.com/200x120?text=React"><p>رد الفعل</p></div>
+      <div class="game" onclick="showGame('color')"><img src="https://via.placeholder.com/200x120?text=Colors"><p>اختيار اللون</p></div>
+      <div class="game" onclick="showGame('order')"><img src="https://via.placeholder.com/200x120?text=Order"><p>ترتيب</p></div>
+      <div class="game" onclick="showGame('trivia')"><img src="https://via.placeholder.com/200x120?text=Trivia"><p>سؤال وجواب</p></div>
+    </div>
+  </div>
+
+  <!-- الأقسام -->
+  <div id="rock" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>حجر ✊ ورقة ✋ مقص ✌️</h2>
+    <button onclick="playRPS('rock')">✊</button>
+    <button onclick="playRPS('paper')">✋</button>
+    <button onclick="playRPS('scissors')">✌️</button>
+    <h3 id="rps-result"></h3>
+  </div>
+
+  <div id="xo" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>XO</h2>
+    <div id="xo-board" style="display: grid; grid-template-columns: repeat(3, 100px); gap: 5px; justify-content: center;"></div>
+  </div>
+
+  <div id="guess" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>تخمين الرقم</h2>
+    <input type="number" id="userGuess" min="1" max="10">
+    <button onclick="checkGuess()">تحقق</button>
+    <h3 id="guess-result"></h3>
+  </div>
+
+  <div id="memory" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>لعبة الذاكرة</h2>
+    <button onclick="startMemory()">ابدأ</button>
+    <h3 id="memory-seq"></h3>
+  </div>
+
+  <div id="click" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>سرعة الضغط</h2>
+    <button id="clickBtn" onclick="clickGame()" disabled>اضغطني!</button>
+    <button onclick="startClickGame()">ابدأ</button>
+    <h3 id="click-score">النتيجة: 0</h3>
+  </div>
+
+  <div id="math" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>حل المعادلة</h2>
+    <h3 id="math-question"></h3>
+    <input type="number" id="math-answer">
+    <button onclick="checkMath()">تحقق</button>
+    <h3 id="math-result"></h3>
+  </div>
+
+  <div id="reaction" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>اختبر رد فعلك</h2>
+    <button id="react-btn" onclick="checkReaction()" disabled>اضغط الآن!</button>
+    <h3 id="react-result"></h3>
+  </div>
+
+  <div id="color" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>اختر اللون الصحيح</h2>
+    <h3 id="target-color"></h3>
+    <div id="color-options"></div>
+    <h3 id="color-result"></h3>
+  </div>
+
+  <div id="order" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>اضغط الأرقام بالترتيب</h2>
+    <div id="order-numbers" style="display: flex; gap: 10px; justify-content: center;"></div>
+    <h3 id="order-result"></h3>
+  </div>
+
+  <div id="trivia" class="game-section hidden">
+    <button onclick="goHome()">🏠 رجوع</button>
+    <h2>سؤال وجواب</h2>
+    <h3 id="trivia-q"></h3>
+    <div id="trivia-options"></div>
+    <h3 id="trivia-result"></h3>
+  </div>
+
+  <script>
+    function showGame(id) {
+      document.getElementById('home').style.display = 'none';
+      document.querySelectorAll('.game-section').forEach(g => g.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      if (id === 'xo') initXO();
+      if (id === 'math') generateMath();
+      if (id === 'reaction') startReaction();
+      if (id === 'color') generateColor();
+      if (id === 'order') generateOrder();
+      if (id === 'trivia') loadTrivia();
+    }
+
+    function goHome() {
+      document.getElementById('home').style.display = 'block';
+      document.querySelectorAll('.game-section').forEach(g => g.classList.add('hidden'));
+    }
+
+    function playRPS(user) {
+      const choices = ['rock', 'paper', 'scissors'];
+      const comp = choices[Math.floor(Math.random() * 3)];
+      let result = '';
+      if (user === comp) result = 'تعادل!';
+      else if (
+        (user === 'rock' && comp === 'scissors') ||
+        (user === 'paper' && comp === 'rock') ||
+        (user === 'scissors' && comp === 'paper')
+      ) result = 'فزت!';
+      else result = 'خسرت!';
+      document.getElementById('rps-result').innerText = `أنت: ${user}، الكمبيوتر: ${comp} → ${result}`;
+    }
+
+    function initXO() {
+      const board = document.getElementById("xo-board");
+      board.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement("div");
+        cell.style.width = "100px";
+        cell.style.height = "100px";
+        cell.style.background = "#0af";
+        cell.style.fontSize = "2em";
+        cell.style.display = "flex";
+        cell.style.justifyContent = "center";
+        cell.style.alignItems = "center";
+        cell.style.cursor = "pointer";
+        cell.addEventListener("click", () => {
+          cell.innerText = cell.innerText === "" ? "X" : cell.innerText === "X" ? "O" : "";
+        });
+        board.appendChild(cell);
+      }
+    }
+
+    let secret = Math.floor(Math.random() * 10) + 1;
+    function checkGuess() {
+      const guess = parseInt(document.getElementById('userGuess').value);
+      const result = document.getElementById('guess-result');
+      if (guess === secret) {
+        result.innerText = '🎉 صحيح!';
+        secret = Math.floor(Math.random() * 10) + 1;
+      } else {
+        result.innerText = '❌ خطأ';
+      }
+    }
+
+    function startMemory() {
+      const seq = Array.from({ length: 5 }, () => Math.floor(Math.random() * 10)).join(' - ');
+      document.getElementById('memory-seq').innerText = `تذكر: ${seq}`;
+      setTimeout(() => {
+        document.getElementById('memory-seq').innerText = '🔒 انتهى الوقت!';
+      }, 3000);
+    }
+
+    let clickCount = 0;
+    function startClickGame() {
+      clickCount = 0;
+      document.getElementById('click-score').innerText = 'النتيجة: 0';
+      const btn = document.getElementById('clickBtn');
+      btn.disabled = false;
+      setTimeout(() => {
+        btn.disabled = true;
+        alert('النتيجة: ' + clickCount);
+      }, 5000);
+    }
+    function clickGame() {
+      clickCount++;
+      document.getElementById('click-score').innerText = `النتيجة: ${clickCount}`;
+    }
+
+    let a, b;
+    function generateMath() {
+      a = Math.floor(Math.random() * 10);
+      b = Math.floor(Math.random() * 10);
+      document.getElementById("math-question").innerText = `كم حاصل: ${a} + ${b}؟`;
+    }
+    function checkMath() {
+      const ans = parseInt(document.getElementById("math-answer").value);
+      document.getElementById("math-result").innerText = (ans === a + b) ? "✅ صحيح!" : "❌ خطأ";
+    }
+
+    function startReaction() {
+      const btn = document.getElementById("react-btn");
+      btn.disabled = true;
+      document.getElementById("react-result").innerText = "";
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerText = "اضغط الآن!";
+      }, Math.random() * 3000 + 1000);
+    }
+
+    function checkReaction() {
+      document.getElementById("react-result").innerText = "✅ ممتاز!";
+    }
+
+    function generateColor() {
+      const colors = ['red', 'green', 'blue', 'yellow', 'purple'];
+      const target = colors[Math.floor(Math.random() * colors.length)];
+      document.getElementById('target-color').innerText = `اضغط على اللون: ${target}`;
+      const container = document.getElementById('color-options');
+      container.innerHTML = '';
+      colors.forEach(color => {
+        const div = document.createElement("div");
+        div.className = 'color-option';
+        div.style.backgroundColor = color;
+        div.onclick = () => {
+          document.getElementById('color-result').innerText = (color === target) ? "✅ صحيح!" : "❌ خطأ";
+        };
+        container.appendChild(div);
+      });
+    }
+
+    let orderTarget = [];
+    function generateOrder() {
+      const nums = Array.from({ length: 5 }, () => Math.floor(Math.random() * 50));
+      orderTarget = [...nums].sort((a, b) => a - b);
+      const container = document.getElementById("order-numbers");
+      container.innerHTML = '';
+      nums.forEach(num => {
+        const btn = document.createElement("button");
+        btn.innerText = num;
+        btn.onclick = () => {
+          const expected = orderTarget.shift();
+          if (parseInt(btn.innerText) === expected) {
+            btn.disabled = true;
+            document.getElementById("order-result").innerText = orderTarget.length === 0 ? "🎉 ممتاز!" : "";
+          } else {
+            document.getElementById("order-result").innerText = "❌ خطأ!";
+          }
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function loadTrivia() {
+      const q = "ما عاصمة فرنسا؟";
+      const options = ["برلين", "مدريد", "باريس", "روما"];
+      const correct = "باريس";
+      document.getElementById("trivia-q").innerText = q;
+      const container = document.getElementById("trivia-options");
+      container.innerHTML = '';
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => {
+          document.getElementById("trivia-result").innerText = opt === correct ? "✅ صحيح!" : "❌ خطأ";
+        };
+        container.appendChild(btn);
+      });
+    }
+  </script>
+
+</body>
+</html>
